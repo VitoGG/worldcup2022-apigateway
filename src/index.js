@@ -1,6 +1,8 @@
 const express = require('express')
 const cors = require('cors')
-const midlleware = require('./middleware')
+const wordlGateway = require('./world-gateway')
+const nbaGateway = require('./nba-gateway')
+const { healthCheck }  = require("./core")
 
 const app = express();
 
@@ -10,7 +12,10 @@ app.use(cors({
   credentials: true
 }))
 
-app.use(midlleware)
+app.use("*", (req, res, next) => healthCheck(req, res, next))
+
+app.use("/wordlcup", wordlGateway);
+app.use("/nba", nbaGateway);
 
 
 app.listen(3000, () => {
