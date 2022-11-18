@@ -16,11 +16,11 @@ jobs:
         run: |
           cat > ~/.netrc <<EOF
             machine api.heroku.com
-              login vitorgrigolo@gmail.com
-              password dea69257-60af-4646-ac2b-2f6d370f9102
+              login $HEROKU_EMAIL
+              password $HEROKU_API_KEY
             machine git.heroku.com
-              login vitorgrigolo@gmail.com
-              password dea69257-60af-4646-ac2b-2f6d370f9102
+              login $HEROKU_EMAIL
+              password $HEROKU_API_KEY
           EOF
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
