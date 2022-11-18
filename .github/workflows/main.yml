@@ -5,15 +5,29 @@ on:
     branches: [ master ]
     
 jobs:
-  build:
+  custom-deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Set Heroku Remote
-      env:
-        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-      run: heroku git:remote -a worldcup-teste
-    - name: Deploy
-      env:
-        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-      run: git push heroku HEAD:master
+      - name: Check out repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Heroku login credentials
+        run: |
+          cat > ~/.netrc <<EOF
+            machine api.heroku.com
+              login vitorgrigolo@gmail.com
+              password dea69257-60af-4646-ac2b-2f6d370f9102
+            machine git.heroku.com
+              login vitorgrigolo@gmail.com
+              password dea69257-60af-4646-ac2b-2f6d370f9102
+          EOF
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_EMAIL: vitorgrigolo@gmail.com
+      - name: Add Heroku remote
+        run: heroku git:remote --app worldcup-teste
+        env:
+          HEROKU_APP_NAME: worldcup-teste
+      - name: Push to Heroku
+        run: git push heroku HEAD:master
